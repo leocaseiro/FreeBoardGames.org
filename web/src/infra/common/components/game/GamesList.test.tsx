@@ -14,6 +14,11 @@ describe('GamesList', () => {
   });
 
   describe('filtering', () => {
+    it('should filter by code', () => {
+      type(FIRST_GAME.codes.en || FIRST_GAME.code);
+      expect(screen.getByTestId(`gamecard-${FIRST_GAME.code}`)).toBeInTheDocument();
+    });
+
     it('should filter by name', () => {
       type(FIRST_GAME.name);
       expect(screen.getByTestId(`gamecard-${FIRST_GAME.code}`)).toBeInTheDocument();
