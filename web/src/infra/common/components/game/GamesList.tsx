@@ -6,6 +6,7 @@ import React, { Fragment, useMemo, useState } from 'react';
 import { GameCard } from './GameCard';
 import { Container, Games, Header, Navigable } from './GamesList.ui';
 import SearchBox from './SearchBox';
+import SortBox from './SortBox';
 
 interface Props {
   showDevOnly?: boolean;
@@ -15,13 +16,14 @@ interface Props {
 
 export function GamesList({ hideHeader, showDevOnly, gamePickedCallback }: Props) {
   const [query, setQuery] = useState('');
-  const games = useFilteredGamesList(query, { showDevOnly });
+  const [sort, setSort] = useState('new');
+  const games = useFilteredGamesList(query, { showDevOnly, sort });
 
   const Wrapper = hideHeader ? Fragment : Container;
 
   return (
     <Wrapper>
-      <Header showDevOnly={showDevOnly}>
+      <Header showDevOnly={showDevOnly} sortBox={<SortBox onSelectChange={(value: string) => setSort(value)} />}>
         <SearchBox onInputChange={(value: string) => setQuery(value)} />
       </Header>
       <Games>
@@ -35,10 +37,10 @@ export function GamesList({ hideHeader, showDevOnly, gamePickedCallback }: Props
   );
 }
 
-function useFilteredGamesList(searchQuery: string, options: { showDevOnly?: boolean }) {
+function useFilteredGamesList(searchQuery: string, options: { showDevOnly?: boolean, sort }) {
   return useMemo(() => {
     const status = options.showDevOnly ? IGameStatus.IN_DEVELOPMENT : IGameStatus.PUBLISHED;
-    return getAllGames().filter((game) => {
+    const gamesList = getAllGames().filter((game) => {
       if (searchQuery) {
         return [
           game?.code,
@@ -50,5 +52,14 @@ function useFilteredGamesList(searchQuery: string, options: { showDevOnly?: bool
       }
       return game.status === status;
     });
-  }, [searchQuery, options.showDevOnly]);
+    switch (options.sort) {
+      case 'reverse':
+        return gamesList.reverse();
+      case 'name':
+        return gamesList.sort((a, b) => (a.name > b.name) ? 1 : -1);
+      case 'name-desc':
+        return gamesList.sort((a, b) => (a.name > b.name) ? -1 : 1);
+      default: return gamesList;
+    }
+  }, [searchQuery, options.showDevOnly, options.sort]);
 }

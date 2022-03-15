@@ -11,18 +11,20 @@ export function Container({ children }: { children: ReactNode }) {
   return <div style={{ marginBottom: '16px' }}>{children}</div>;
 }
 
-export function Header({ children, showDevOnly }: { children: ReactNode; showDevOnly: boolean }) {
+export function Header({ children, sortBox, showDevOnly }: { children: ReactNode; sortBox: ReactNode; showDevOnly: boolean }) {
   return (
     <>
       <DesktopView>
         <div style={{ display: 'inline' }}>
           <div style={{ float: 'right', width: '235px' }}>{children}</div>
           <Title showDevOnly={showDevOnly} />
+          {sortBox}
         </div>
       </DesktopView>
 
       <MobileView>
         <Title showDevOnly={showDevOnly} />
+        {sortBox}
         {children}
       </MobileView>
     </>
