@@ -73,6 +73,7 @@ Read top-to-bottom for a full picture, or jump to the chapter that matches your 
 | 4b | **[FBG vs. vanilla boardgame.io](04b-fbg-vs-boardgameio.md)** | What FBG **uses as-is**, **replaces** (the Lobby!), and **adds** vs the upstream OSS framework — and how to read boardgame.io's docs as an FBG engineer. | mermaid layer-cake |
 | 5 | **[Scaling & clustering](05-scaling-clustering.md)** | How each tier scales, sticky sessions for WebSockets, shared state, and the honest **current vs designed-for vs gaps**. | 🏗️ deployment topology (drawio) |
 | 6 | **[DevOps & deployment](06-devops-deployment.md)** | Helm chart, dual-image Docker build, ingress/TLS, daily DB backups, CI (minikube e2e), GitOps deploy, Dependabot, v2 site. | mermaid CI/deploy pipeline |
+| 7 | **[The web tier & Next.js](07-nextjs-web-platform.md)** | Which **Next.js features** the web app uses (and which it can't, on v9.5.5), custom-server **SSR**, the `/graphql` proxy, styling, i18n, build pipeline. | mermaid request lifecycle + build |
 
 **Diagram sources** live in **[`diagrams/`](diagrams/)** as editable `.drawio` files (open at [app.diagrams.net](https://app.diagrams.net)). "Minor" diagrams are inline **Mermaid** and render directly on GitHub.
 

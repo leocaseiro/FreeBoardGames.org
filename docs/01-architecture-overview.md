@@ -37,7 +37,7 @@ fi
 - The two npm scripts: `web/package.json:24` (`start:bgio`) and `:26` (`start:server`)
 - They are the webpack-built outputs of `web/server/bgio.ts` and `web/server/web.ts`.
 
-Why it matters: the **same codebase** ships the web app and the game server. When you read `web/`, remember half of it (`server/bgio.ts`, the boardgame.io game definitions) is really the **game backend**, not the website.
+Why it matters: the **same codebase** ships the web app and the game server. When you read `web/`, remember half of it (`server/bgio.ts`, the boardgame.io game definitions) is really the **game backend**, not the website. (Deep-dive on the web/Next.js tier and its custom-server SSR: [Ch.7](07-nextjs-web-platform.md).)
 
 ---
 

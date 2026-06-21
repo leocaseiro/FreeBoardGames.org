@@ -1,6 +1,6 @@
 # 6 · DevOps & Deployment
 
-_[← 5 · Scaling & clustering](05-scaling-clustering.md) · [Index](00-README.md)_
+_[← 5 · Scaling & clustering](05-scaling-clustering.md) · [Index](00-README.md) · Next: [7 · The web tier & Next.js →](07-nextjs-web-platform.md)_
 
 > **The question this chapter answers:** *"What DevOps runs FBG?"* — the Helm chart, the dual-image Docker build, CI, backups, and the (surprising) way production actually deploys.
 
@@ -164,4 +164,4 @@ Key facts for a new engineer:
 5. **CI runs a full minikube+helm e2e on every PR** but **does not deploy**.
 6. **Prod deploys via a pull-based GitOps script** using a **private secrets repo** — not from GitHub Actions.
 
-_[← 5 · Scaling & clustering](05-scaling-clustering.md) · [Index](00-README.md)_
+_[← 5 · Scaling & clustering](05-scaling-clustering.md) · [Index](00-README.md) · Next: [7 · The web tier & Next.js →](07-nextjs-web-platform.md)_
