@@ -1,6 +1,6 @@
 # 5 · Scaling & Clustering
 
-_[← 4 · boardgame.io & socket.io](04-boardgameio-sockets.md) · [Index](00-README.md) · Next: [6 · DevOps & deployment →](06-devops-deployment.md)_
+_[← 4b · FBG vs boardgame.io](04b-fbg-vs-boardgameio.md) · [Index](00-README.md) · Next: [6 · DevOps & deployment →](06-devops-deployment.md)_
 
 > **The question this chapter answers:** *"How did we scale FBG for large traffic?"* — honestly. The architecture is **built to scale horizontally**, but the **public chart ships single-replica with several gaps**. This chapter separates the three: what's **configured**, what's **designed-for**, and what's **missing**.
 >
@@ -113,4 +113,4 @@ Onboarding truth: here's what a new engineer should know is **missing**, why it 
 4. **Mind the `22 × replicas` Postgres connection math** before scaling fbg-server.
 5. The repo ships **single-replica with real gaps** (no HPA/PDB/limits/readiness); prod numbers live in a **private values file**. The design is ready; the dials are mostly at 1.
 
-_[← 4 · boardgame.io & socket.io](04-boardgameio-sockets.md) · [Index](00-README.md) · Next: [6 · DevOps & deployment →](06-devops-deployment.md)_
+_[← 4b · FBG vs boardgame.io](04b-fbg-vs-boardgameio.md) · [Index](00-README.md) · Next: [6 · DevOps & deployment →](06-devops-deployment.md)_

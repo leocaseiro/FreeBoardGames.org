@@ -1,6 +1,6 @@
 # 4 · boardgame.io & socket.io — the realtime game server
 
-_[← 3 · Realtime & pub/sub](03-realtime-pubsub.md) · [Index](00-README.md) · Next: [5 · Scaling & clustering →](05-scaling-clustering.md)_
+_[← 3 · Realtime & pub/sub](03-realtime-pubsub.md) · [Index](00-README.md) · Next: [4b · FBG vs boardgame.io →](04b-fbg-vs-boardgameio.md)_
 
 > **The question this chapter answers:** *"How do we use clusters with socket.io, and how do we make sure we don't get confused between different sockets?"* — for **live gameplay**. The lobby/chat side was [Ch.3](03-realtime-pubsub.md).
 >
@@ -170,4 +170,4 @@ sequenceDiagram
 5. The browser connects to a **per-match server URL** assigned by `fbg-server`; **cookie affinity** keeps the socket.io connection pinned (required by socket.io v4's upgrade).
 6. ⚠️ With default Helm values, **per-match pinning is latent** (single Service URL) — stickiness is doing the real work; wire per-pod URLs to activate true pinning.
 
-_[← 3 · Realtime & pub/sub](03-realtime-pubsub.md) · [Index](00-README.md) · Next: [5 · Scaling & clustering →](05-scaling-clustering.md)_
+_[← 3 · Realtime & pub/sub](03-realtime-pubsub.md) · [Index](00-README.md) · Next: [4b · FBG vs boardgame.io →](04b-fbg-vs-boardgameio.md)_
