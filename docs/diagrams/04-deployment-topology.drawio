@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" modified="2026-06-21T00:00:00.000Z" agent="ClaudeCode" version="24.7.17">
+  <diagram id="fbg-deployment-topology" name="Kubernetes Deployment Topology">
+    <mxGraphModel dx="1700" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1150" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Kubernetes deployment topology (Helm chart 'fbg') — objects, ports, probes, env wiring" style="text;html=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="280" y="20" width="1080" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="internet" value="Internet → Cloudflare" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f38020;strokeColor=#c45f00;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="60" y="120" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ingress" value="Ingress 'ingress'&#xa;host: {domain}&#xa;class: nginx&#xa;cert-manager: letsencrypt-prod (TLS)&#xa;force-ssl-redirect, CORS&#xa;affinity: cookie (sticky)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#6aa84f;fontStyle=0;align=left;spacingLeft=8;" vertex="1" parent="1">
+          <mxGeometry x="60" y="230" width="250" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="route" value="path routing (longest-prefix):&#xa;/socket.io/  → Service fbg-bgio&#xa;/graphql     → Service fbg-server&#xa;/ (catch-all) → Service fbg-web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="60" y="410" width="250" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="svcweb" value="Service fbg-web&#xa;ClusterIP :80→3000&#xa;affinity: None" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="110" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svcfbg" value="Service fbg-server&#xa;ClusterIP :80→3001&#xa;affinity: None" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="300" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="svcbgio" value="Service fbg-bgio&#xa;ClusterIP :80→8001&#xa;affinity: None" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="400" y="500" width="190" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="depweb" value="Deployment fbg-web (replicas=1)&#xa;image: freeboardgames/web&#xa;SERVER_TYPE=WEB, :3000&#xa;FBG_BACKEND_TARGET={release}-fbg-server&#xa;liveness GET /en (initialDelay 180s)&#xa;NO readiness · req 100m/128Mi · no limits&#xa;rollout surge 100% / unavail 25%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="680" y="90" width="320" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="depfbg" value="Deployment fbg-server (replicas=1)&#xa;image: freeboardgames/fbg-server&#xa;:3001 · JWT_SECRET · FORCE_DB_SYNC&#xa;BGIO_PRIVATE_SERVERS={release}-bgio&#xa;BGIO_PUBLIC_SERVERS=https://{domain}&#xa;liveness GET /healthz (deep GraphQL)&#xa;NO readiness · req 100m/128Mi · no limits" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="680" y="280" width="320" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="depbgio" value="Deployment fbg-bgio (replicas=1)&#xa;image: freeboardgames/web (BGIO mode)&#xa;SERVER_TYPE=BGIO, BGIO_PORT=8001&#xa;liveness GET /games (initialDelay 30s)&#xa;NO readiness · req 100m/128Mi · no limits&#xa;rollout surge 25% / unavail 25%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="680" y="480" width="320" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="pg" value="postgresql (Bitnami 9.8.9)&#xa;:5432 fbgDb · single instance&#xa;lobby + boardgame.io state&#xa;POSTGRES_URL → fbg-server &amp; bgio" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="230" width="240" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="redis" value="redis (Bitnami 14.1.0)&#xa;standalone master :6379&#xa;FBG_REDIS_* → fbg-server &amp; bgio&#xa;pub/sub only" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="420" width="240" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="cron" value="CronJob fbg-backuper&#xa;schedule 0 12 * * * (daily UTC)&#xa;pg_dump + per-table CSV → GCS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eadcf8;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="610" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="gcs" value="GCS gs://fbg-database-dump" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#4285F4;strokeColor=#4285F4;fontColor=#ffffff;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="625" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="internet" target="ingress"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e2" value="/" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="ingress" target="svcweb"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e3" value="/graphql" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="ingress" target="svcfbg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e4" value="/socket.io/" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="ingress" target="svcbgio"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="svcweb" target="depweb"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="svcfbg" target="depfbg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="svcbgio" target="depbgio"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e8" value="proxy (HTTP)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;dashed=1;" edge="1" parent="1" source="depweb" target="svcfbg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e9" value="create/join match" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;dashed=1;" edge="1" parent="1" source="depfbg" target="svcbgio"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="depfbg" target="pg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="depbgio" target="pg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="depfbg" target="redis"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="depbgio" target="redis"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="cron" target="pg"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;" edge="1" parent="1" source="cron" target="gcs"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
