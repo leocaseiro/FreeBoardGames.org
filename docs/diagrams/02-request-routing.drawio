@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" modified="2026-06-21T00:00:00.000Z" agent="ClaudeCode" version="24.7.17">
+  <diagram id="fbg-request-routing" name="Request Routing — 4 Transports">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="950" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="How one browser tab's four transports are routed" style="text;html=1;strokeColor=none;fillColor=none;fontSize=22;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="780" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" value="Browser (one tab)&#xa;• HTML page loads&#xa;• Apollo httpLink (queries/mutations)&#xa;• Apollo wsLink (subscriptions)&#xa;• boardgame.io SocketIO client (moves)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#232F3E;strokeColor=#232F3E;fontColor=#ffffff;align=left;spacingLeft=10;fontStyle=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="330" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cf" value="Cloudflare → nginx Ingress&#xa;TLS termination&#xa;cookie affinity (sticky)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f38020;strokeColor=#c45f00;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="390" y="350" width="210" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="web" value="web :3000&#xa;Next.js + Express&#xa;SSR, /docs, static" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="780" y="120" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="fbg" value="fbg-server :3001&#xa;NestJS Apollo GraphQL&#xa;HTTP + WS subscriptions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="780" y="360" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="bgio" value="bgio :8001&#xa;boardgame.io + socket.io&#xa;per-match server URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="780" y="600" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="t1" value="1) GET / , /docs, static&#xa;(HTML, SSR)" style="text;html=1;align=left;fontSize=11;fontColor=#1f5c1f;" vertex="1" parent="1">
+          <mxGeometry x="610" y="150" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t2" value="2) POST /graphql&#xa;(queries / mutations, HTTP)" style="text;html=1;align=left;fontSize=11;fontColor=#1f3c88;" vertex="1" parent="1">
+          <mxGeometry x="610" y="300" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t3" value="3) wss://host/graphql&#xa;(GraphQL subscriptions, WS)" style="text;html=1;align=left;fontSize=11;fontColor=#1f3c88;" vertex="1" parent="1">
+          <mxGeometry x="610" y="430" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="t4" value="4) wss://host/socket.io/&#xa;(game moves)" style="text;html=1;align=left;fontSize=11;fontColor=#1f5c1f;" vertex="1" parent="1">
+          <mxGeometry x="610" y="560" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="e-b-cf" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeWidth=2;" edge="1" parent="1" source="browser" target="cf">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-cf-web" value="/" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="cf" target="web">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-cf-fbg" value="/graphql (HTTP + WS)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#6c8ebf;strokeWidth=2;" edge="1" parent="1" source="cf" target="fbg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-cf-bgio" value="/socket.io/" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;strokeColor=#82b366;strokeWidth=2;" edge="1" parent="1" source="cf" target="bgio">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-web-fbg" value="in-pod proxy&#xa;(HTTP /graphql only;&#xa;NO WebSocket)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#999999;" edge="1" parent="1" source="web" target="fbg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="note" value="⚠️ The web pod is NOT in the realtime path.&#xa;GraphQL subscriptions (3) and socket.io (4) go edge → backend directly.&#xa;web/server/web.ts:84 proxies HTTP /graphql only (no ws:true / upgrade handler)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;align=left;spacingLeft=8;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="370" y="600" width="380" height="100" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
